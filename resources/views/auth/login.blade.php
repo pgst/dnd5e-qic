@@ -1,7 +1,7 @@
 <x-guest-layout>
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
-
+{{-- 
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
@@ -48,6 +48,7 @@
     <div class="text-center my-2">
         or
     </div>
+--}}
     <div class="w-full">
         <a href="/auth/discord/redirect" class="w-full space-x-2 flex justify-center items-center px-4 py-2 border hover:bg-gray-100">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-discord" viewBox="0 0 16 16">
