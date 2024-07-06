@@ -20,6 +20,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Discordログイン用のSocialiteプロバイダーを登録
         Event::listen(
             function (\SocialiteProviders\Manager\SocialiteWasCalled $event) {
                 $event->extendSocialite('discord',

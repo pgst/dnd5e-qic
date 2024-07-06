@@ -15,7 +15,8 @@
 				"onecentlin.laravel5-snippets",
 				"onecentlin.laravel-blade",
 				"codingyu.laravel-goto-view",
-				"mhutchie.git-graph"
+				"mhutchie.git-graph",
+				"oderwat.indent-rainbow"
 			],
 			"settings": {}
 		}
