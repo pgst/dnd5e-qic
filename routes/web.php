@@ -25,7 +25,7 @@ Route::get('/auth/discord/callback', function () {
         'name' => $socialiteUser->name,
         'email' => $socialiteUser->email,
         'img_url' => $socialiteUser->avatar,
-        'password' => bcrypt('dummy_password'), // ダミーのパスワードを設定
+        'password' => bcrypt(env('DISCORD_DUMMY_PASSWORD')), // ダミーのパスワードを設定
     ]);
 
     Auth::login($user);
