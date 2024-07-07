@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
+use App\Http\Controllers\CsvImportController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -32,6 +33,9 @@ Route::get('/auth/discord/callback', function () {
 
     return redirect('/dashboard');
 });
+
+Route::get('/import-csv', [CsvImportController::class, 'show']);
+Route::post('/import-csv', [CsvImportController::class, 'import']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
