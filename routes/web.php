@@ -2,9 +2,11 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use App\Http\Controllers\CsvImportController;
+use App\Http\Controllers\UserExaminationController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -36,6 +38,10 @@ Route::get('/auth/discord/callback', function () {
 
 Route::get('/import-csv', [CsvImportController::class, 'show']);
 Route::post('/import-csv', [CsvImportController::class, 'import']);
+
+// Route::get('/user-examination/reception', [UserExaminationController::class, 'reception'])
+//     ->name('user-examination.reception');
+Route::resource('user-examination', UserExaminationController::class, ['only' => ['create', 'store', 'index']]);
 
 Route::get('/dashboard', function () {
     return view('dashboard');

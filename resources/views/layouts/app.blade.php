@@ -29,6 +29,8 @@
 
             <!-- Page Content -->
             <main>
+                <x-message :message="session('message')" />
+        
                 {{ $slot }}
             </main>
         </div>

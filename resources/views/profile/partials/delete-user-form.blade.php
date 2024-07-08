@@ -6,7 +6,7 @@
 
         <p class="mt-1 text-sm text-gray-600">
             {{-- {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.') }} --}}
-            {{ __('アカウントを削除するには、キーワードが必要です。') }}
+            アカウントを削除するには、パスワードが必要です。管理者に確認してください。
         </p>
     </header>
 
@@ -37,7 +37,7 @@
                     type="password"
                     class="mt-1 block w-3/4"
                     {{-- placeholder="{{ __('Password') }}" --}}
-                    placeholder="{{ __('管理者からキーワードを聞いて、ここに入力してください。') }}"
+                    placeholder="ここにパスワードを入力してください。"
                 />
 
                 <x-input-error :messages="$errors->userDeletion->get('password')" class="mt-2" />
