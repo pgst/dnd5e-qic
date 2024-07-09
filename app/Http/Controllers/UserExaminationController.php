@@ -45,8 +45,9 @@ class UserExaminationController extends Controller
         // ログインユーザーの回答欄があれば取得する
         $userExaminations = UserExamination::where('user_id', auth()->id())->get();
 
+        // 未提出がある場合は、メッセージを設定
         if ($userExaminations->where('question_num', '>', 0)->count() > 0) {
-            $request->session()->flash('message', '未提出の解答があるので再度表示します。');
+            $message = '未提出の解答があるので再度表示します。';
         }
 
         // 挑戦回数の最大値を取得して、今回の挑戦回数を設定
@@ -69,7 +70,7 @@ class UserExaminationController extends Controller
             }
         }
         
-        return redirect()->route('user-examination.index');
+        return redirect()->route('user-examination.index')->with('message', $message ?? '');
     }
 
     /**
