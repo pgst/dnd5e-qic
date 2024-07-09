@@ -13,13 +13,14 @@ class UserExaminationController extends Controller
      */
     public function index()
     {
-        $userExams = UserExamination::where('user_id', auth()->id())->paginate(1);
+        $itemsPerExam = env('ITEMS_PER_EXAM');
+        $userExams = UserExamination::where('user_id', auth()->id())->paginate($itemsPerExam);
         
         // パラメーターのpageを取得
         $page = request('page');
         if (empty($page)) { $page = 1; }
 
-        return view('user-examination.index', compact('userExams', 'page'));
+        return view('user-examination.index', compact('userExams', 'page', 'itemsPerExam'));
     }
 
     /**
@@ -47,7 +48,7 @@ class UserExaminationController extends Controller
 
         // 未提出がある場合は、メッセージを設定
         if ($userExaminations->where('question_num', '>', 0)->count() > 0) {
-            $message = '未提出の解答があるので再度表示します。';
+            $message = '前回の試験が完了していないので再度表示します。';
         }
 
         // 挑戦回数の最大値を取得して、今回の挑戦回数を設定
@@ -69,8 +70,15 @@ class UserExaminationController extends Controller
                 $question_num++;                                      // 問題番号をインクリメント
             }
         }
-        
-        return redirect()->route('user-examination.index')->with('message', $message ?? '');
+
+        $userExamFirst = UserExamination::where('user_id', auth()->id())->where('question_num', 1)->first();
+
+        if (empty($userExamFirst)) {
+            return redirect()->route('user-examination.create')->with('message', '問題文がありません。');
+        } else {
+            return redirect()->route('user-examination.edit', ['user_examination' => $userExamFirst->id])
+                ->with('message', $message ?? '');
+        }
     }
 
     /**
@@ -86,7 +94,9 @@ class UserExaminationController extends Controller
      */
     public function edit(UserExamination $userExamination)
     {
-        //
+        $itemsPerExam = env('ITEMS_PER_EXAM');
+        
+        return view('user-examination.edit', compact('userExamination', 'itemsPerExam'));
     }
 
     /**
@@ -94,7 +104,14 @@ class UserExaminationController extends Controller
      */
     public function update(Request $request, UserExamination $userExamination)
     {
-        //
+        // dd($request->completed);
+        if ($request->completed == 'true') {
+            // return "完了しました。";
+            return redirect()->route('user-examination.index');
+        } else {
+            $next = $userExamination->id + 1;
+            return redirect()->route('user-examination.edit', ['user_examination' => $next]);
+        }
     }
 
     /**

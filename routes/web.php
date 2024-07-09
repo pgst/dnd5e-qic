@@ -41,8 +41,9 @@ Route::post('/import-csv', [CsvImportController::class, 'import']);
 
 // Route::get('/user-examination/reception', [UserExaminationController::class, 'reception'])
 //     ->name('user-examination.reception');
-Route::resource('user-examination', UserExaminationController::class, ['only' => ['create', 'store', 'index']])
-    ->middleware(['auth', 'verified']);
+Route::resource('user-examination', UserExaminationController::class)
+// Route::resource('user-examination', UserExaminationController::class, ['only' => ['create', 'store', 'index']])
+->middleware(['auth', 'verified']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
