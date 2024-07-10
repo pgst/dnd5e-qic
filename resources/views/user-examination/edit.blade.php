@@ -22,7 +22,7 @@
                         <div>
                             <p class="font-bold">
                                 <span>あなたの選択：</span>
-                                <span>{{ $userExamination->selected_answer }}</span>
+                                <span id="your_choice">{{ $userExamination->selected_answer }}</span>
                             </p>
                             <div class="text-right mt-1">
                                 <x-secondary-button onclick="setSelectedAnswer('はい')">
@@ -47,6 +47,7 @@
     <script>
     function setSelectedAnswer(answer) {
         document.getElementById('selected_answer').value = answer;
+        document.getElementById('your_choice').textContent = answer;
     }
     </script>
 </x-app-layout>
