@@ -19,56 +19,34 @@
                         @csrf
                         @method('patch')
 
-                        <div
-                            x-data="{
-                                selectedOption: '',
-                                init() {
-                                    const pageKey = 'selectedOption-' + '{{ $userExamination->question_num }}';
-                                    this.selectedOption = localStorage.getItem(pageKey) || '';
-                                },
-                                updateSelectedOption(option) {
-                                    const pageKey = 'selectedOption-' + '{{ $userExamination->question_num }}';
-                                    localStorage.setItem(pageKey, option);
-                                    this.selectedOption = option;
-                                }
-                            }"
-                            x-init="init()"
-                        >
-                            <p class="font-bold">あなたの選択：<span x-text="selectedOption === 'yes' ? 'はい' : selectedOption === 'no' ? 'いいえ' : ''"></span></p>
+                        <div>
+                            <p class="font-bold">
+                                <span>あなたの選択：</span>
+                                <span>{{ $userExamination->selected_answer }}</span>
+                            </p>
                             <div class="text-right mt-1">
-                                <x-secondary-button @click="updateSelectedOption('yes')">
+                                <x-secondary-button onclick="setSelectedAnswer('はい')">
                                     はい
                                 </x-secondary-button>
-
-                                <x-secondary-button @click="updateSelectedOption('no')">
+                                <x-secondary-button onclick="setSelectedAnswer('いいえ')">
                                     いいえ
                                 </x-secondary-button>
                             </div>
                         </div>
 
-                        <div class="mt-6 text-center"
-                            x-data="{
-                                checkLocalStorage() {
-                                    let allSelected = true;
-                                    for (let i = 1; i <= {{ $itemsPerExam }}; i++) {
-                                        if (localStorage.getItem('selectedOption-' + i) === null) {
-                                            allSelected = false;
-                                            break;
-                                        }
-                                    }
-                                    if (allSelected) {
-                                        this.$refs.completedInput.value = 'true';
-                                    }
-                                }
-                            }"
-                            x-init="checkLocalStorage()"
-                        >
-                            <input type="hidden" name="completed" value="false" x-ref="completedInput">
-                            <x-primary-button @click="checkLocalStorage()">回答</x-primary-button>
+                        <div class="mt-6 text-center">
+                            <input type="hidden" name="selected_answer" id="selected_answer" value="{{ $userExamination->selected_answer }}">
+                            <x-primary-button>回答</x-primary-button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+    function setSelectedAnswer(answer) {
+        document.getElementById('selected_answer').value = answer;
+    }
+    </script>
 </x-app-layout>

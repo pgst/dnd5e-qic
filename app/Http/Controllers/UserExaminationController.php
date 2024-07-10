@@ -82,14 +82,6 @@ class UserExaminationController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(UserExamination $userExamination)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit(UserExamination $userExamination)
@@ -104,21 +96,44 @@ class UserExaminationController extends Controller
      */
     public function update(Request $request, UserExamination $userExamination)
     {
-        // dd($request->completed);
-        if ($request->completed == 'true') {
-            // return "完了しました。";
+        $validated = $request->validate([
+            'selected_answer' => 'required',
+        ]);
+
+        $validated['user_id'] = auth()->id();
+
+        $userExamination->update($validated);
+
+        // 最終問題の場合は、提出確認画面に遷移
+        if ($userExamination->question_num == env('ITEMS_PER_EXAM')) {
             return redirect()->route('user-examination.index');
-        } else {
-            $next = $userExamination->id + 1;
-            return redirect()->route('user-examination.edit', ['user_examination' => $next]);
         }
+
+        // 全ての問題が回答済みなら、提出確認画面に遷移
+        $userExaminations = UserExamination::where('user_id', auth()->id())
+            ->where('question_num', '>' , 0)
+            ->where('selected_answer', '!=', null)->get();
+        if ($userExaminations->count() == env('ITEMS_PER_EXAM')) {
+            return redirect()->route('user-examination.index');
+        }
+
+        // 次の問題に遷移
+        $next = $userExamination->id + 1;
+        return redirect()->route('user-examination.edit', ['user_examination' => $next]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(UserExamination $userExamination)
+    public function result(Request $request)
     {
-        //
+        $itemsPerExam = env('ITEMS_PER_EXAM');
+        $passingScore = (int)ceil($itemsPerExam * env('PASSING_RATE'));
+
+        $userExaminations = UserExamination::where('user_id', auth()->id())->get();
+        $correctCount = $userExaminations->where('is_correct', 1)->count();
+        $score = $correctCount;
+
+        $result = ($score >= $passingScore) ? '合格' : '不合格';
+
+        // return view('user-examination.result', compact('score', 'passingScore', 'result'));
+        return '<h1>合格</h1>';
     }
 }

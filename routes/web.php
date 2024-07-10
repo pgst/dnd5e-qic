@@ -39,11 +39,10 @@ Route::get('/auth/discord/callback', function () {
 Route::get('/import-csv', [CsvImportController::class, 'show']);
 Route::post('/import-csv', [CsvImportController::class, 'import']);
 
-// Route::get('/user-examination/reception', [UserExaminationController::class, 'reception'])
-//     ->name('user-examination.reception');
-Route::resource('user-examination', UserExaminationController::class)
-// Route::resource('user-examination', UserExaminationController::class, ['only' => ['create', 'store', 'index']])
-->middleware(['auth', 'verified']);
+Route::resource('user-examination', UserExaminationController::class, ['except' => ['show', 'destroy']])
+    ->middleware(['auth', 'verified']);
+Route::post('user-examination/result', [UserExaminationController::class, 'result'])
+    ->name('user-examination.result');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

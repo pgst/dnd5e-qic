@@ -12,19 +12,25 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     @foreach ($userExams as $index => $userExam)
-                    <p>{{ $userExam->examination->question_txt }}</p>
+                    <div class="mb-5 pb-5">
+                        <p>{{ $userExam->examination->question_txt }}</p>
 
-                    <div class="mb-6 pb-6">
-                        <p class="font-bold">あなたの選択：<span></span></p>
+                        <div>
+                            <p class="font-bold">
+                                <span>あなたの選択：</span>
+                                <span>{{ $userExam->selected_answer }}</span>
+                                <span>　</span>
+                                <x-secondary-button>再検討</x-secondary-button>
+                            </p>
+                        </div>
                     </div>
                     @endforeach
 
                     <div class="mt-6 text-center">
-                        <form method="POST" action="">
+                        <form method="POST" action="{{ route('user-examination.result'); }}">
                             @csrf
-                            
-                            <input type="hidden" name="exam" value="{{ $itemsPerExam }}">
-                            <x-secondary-button>戻る</x-secondary-button>
+
+                            <span>これらの選択でよろしければ、提出ボタンをクリックしてください。</span>
                             <x-primary-button>提出</x-primary-button>
                         </form>
                     </div>

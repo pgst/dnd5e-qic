@@ -13,4 +13,11 @@ class UserExamination extends Model
     {
         return $this->belongsTo(Examination::class, 'examination_id');
     }
+
+    protected $fillable = [
+        'selected_answer',  // 選択した答え
+        'cleared',          // 正解したかどうか
+        'challenge_num',    // 挑戦回数
+        'question_num',     // 問題番号
+    ];
 }
