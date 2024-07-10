@@ -136,7 +136,8 @@ class UserExaminationController extends Controller
         $passingScore = (int)ceil($itemsPerExam * env('PASSING_RATE'));
 
         $userExaminations = UserExamination::where('user_id', auth()->id())->get();
-        $correctCount = $userExaminations->where('cleared', 1)->count();
+        $correctCount = $userExaminations->where('question_num', '>', 0)
+            ->where('cleared', 1)->count();
         $score = $correctCount;
 
         $name = auth()->user()->name;
