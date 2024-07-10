@@ -9,7 +9,8 @@ use App\Http\Controllers\CsvImportController;
 use App\Http\Controllers\UserExaminationController;
 
 Route::get('/', function () {
-    return view('welcome');
+    // return view('welcome');
+    return redirect(route('user-examination.create'));
 });
 
 // Discordログイン用URL
@@ -33,7 +34,8 @@ Route::get('/auth/discord/callback', function () {
 
     Auth::login($user);
 
-    return redirect('/dashboard');
+    // return redirect('/dashboard');
+    return redirect(route('user-examination.create'));
 });
 
 Route::get('/import-csv', [CsvImportController::class, 'show']);

@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            PL試験　第{{ $userExamination->question_num }}問目（{{ $itemsPerExam }}問出題中）
+            5EPL試験　第{{ $userExamination->question_num }}問目（{{ $itemsPerExam }}問出題中）
         </h2>
     </x-slot>
 
