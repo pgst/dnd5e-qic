@@ -96,9 +96,17 @@ class UserExaminationController extends Controller
      */
     public function update(Request $request, UserExamination $userExamination)
     {
+        // 「はい」or「いいえ」の選択がない場合は、戻ってエラーメッセージを表示
+        if ($request->selected_answer == null) {
+            return back()->with('message', '回答を選択してください。');
+        }
+
         $validated = $request->validate([
             'selected_answer' => 'required',
         ]);
+
+        $validated['cleared'] =
+            ($validated['selected_answer'] == $userExamination->examination->correct_answer) ? 1 : 0;
 
         $validated['user_id'] = auth()->id();
 
@@ -128,12 +136,18 @@ class UserExaminationController extends Controller
         $passingScore = (int)ceil($itemsPerExam * env('PASSING_RATE'));
 
         $userExaminations = UserExamination::where('user_id', auth()->id())->get();
-        $correctCount = $userExaminations->where('is_correct', 1)->count();
+        $correctCount = $userExaminations->where('cleared', 1)->count();
         $score = $correctCount;
 
+        $name = auth()->user()->name;
         $result = ($score >= $passingScore) ? '合格' : '不合格';
 
-        // return view('user-examination.result', compact('score', 'passingScore', 'result'));
-        return '<h1>合格</h1>';
+        // ユーザーの回答の問題番号をすべて0に初期化
+        foreach ($userExaminations as $userExamination) {
+            $userExamination->question_num = 0;
+            $userExamination->save();
+        }
+
+        return view('user-examination.result', compact('name', 'score', 'result'));
     }
 }
