@@ -47,7 +47,7 @@ class UserExaminationController extends Controller
         $userExaminations = UserExamination::where('user_id', auth()->id())->get();
 
         // 未提出がある場合は、メッセージを設定
-        if ($userExaminations->where('question_num', '>', 0)->count() > 0) {
+        if ($userExaminations->where('enabled', 1)->count() > 0) {
             $message = '前回の試験が完了していないので再度表示します。';
         }
 
@@ -55,7 +55,7 @@ class UserExaminationController extends Controller
         $challenge_num = $userExaminations->max('challenge_num') + 1;
         
         // 未提出がない場合は、問題文からランダムに取得する
-        if ($userExaminations->where('question_num', '>', 0)->count() == 0) {
+        if ($userExaminations->where('enabled', 1)->count() == 0) {
             $examinations = Examination::where('enabled', 1)->inRandomOrder()->limit($itemsPerExam)->get();
 
             // 回答欄を準備
@@ -64,6 +64,7 @@ class UserExaminationController extends Controller
                 $userExamination = new UserExamination();             // 回答欄オブジェクトを生成
                 $userExamination->user_id = auth()->id();             // ログインユーザーのIDを設定
                 $userExamination->examination_id = $examination->id;  // 問題文のIDを設定
+                $userExamination->enabled = 1;                        // 有効フラグを設定
                 $userExamination->challenge_num = $challenge_num;     // 挑戦回数を設定
                 $userExamination->question_num = $question_num;       // 問題番号を設定
                 $userExamination->save();                             // 1レコード保存
@@ -143,9 +144,9 @@ class UserExaminationController extends Controller
         $name = auth()->user()->name;
         $result = ($score >= $passingScore) ? '合格' : '不合格';
 
-        // ユーザーの回答の問題番号をすべて0に初期化
+        // 回答欄の有効フラグを無効にする
         foreach ($userExaminations as $userExamination) {
-            $userExamination->question_num = 0;
+            $userExamination->enabled = 0;
             $userExamination->save();
         }
 
