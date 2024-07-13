@@ -49,7 +49,8 @@ Route::resource('user-examination', UserExaminationController::class, ['except' 
     ->name('user-examination.result');
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    // return view('dashboard');
+    return redirect(route('user-examination.create'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
