@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            5EPL試験　提出確認
+            <i class="fa-solid fa-dice-d20"></i>5EPL試験　提出確認
         </h2>
     </x-slot>
 
