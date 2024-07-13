@@ -11,18 +11,6 @@ class UserExaminationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $itemsPerExam = env('ITEMS_PER_EXAM');
-        $userExams = UserExamination::where('user_id', auth()->id())->paginate($itemsPerExam);
-        
-        // パラメーターのpageを取得
-        $page = request('page');
-        if (empty($page)) { $page = 1; }
-
-        return view('user-examination.index', compact('userExams', 'page', 'itemsPerExam'));
-    }
-
     /**
      * Show the form for creating a new resource.
      */
@@ -72,7 +60,8 @@ class UserExaminationController extends Controller
             }
         }
 
-        $userExamFirst = UserExamination::where('user_id', auth()->id())->where('question_num', 1)->first();
+        $userExamFirst = UserExamination::where('user_id', auth()->id())
+            ->where('enabled', 1)->where('question_num', 1)->first();
 
         if (empty($userExamFirst)) {
             return redirect()->route('user-examination.create')->with('message', '問題文がありません。');
@@ -99,7 +88,7 @@ class UserExaminationController extends Controller
     {
         // 「はい」or「いいえ」の選択がない場合は、戻ってエラーメッセージを表示
         if ($request->selected_answer == null) {
-            return back()->with('message', '回答を選択してください。');
+            return back()->with('message', '「はい」か「いいえ」を選択してください。');
         }
 
         $validated = $request->validate([
@@ -115,15 +104,14 @@ class UserExaminationController extends Controller
 
         // 最終問題の場合は、提出確認画面に遷移
         if ($userExamination->question_num == env('ITEMS_PER_EXAM')) {
-            return redirect()->route('user-examination.index');
+            return redirect()->route('user-examination.confirm');
         }
 
         // 全ての問題が回答済みなら、提出確認画面に遷移
         $userExaminations = UserExamination::where('user_id', auth()->id())
-            ->where('question_num', '>' , 0)
-            ->where('selected_answer', '!=', null)->get();
+            ->where('enabled', 1)->where('selected_answer', '!=', null)->get();
         if ($userExaminations->count() == env('ITEMS_PER_EXAM')) {
-            return redirect()->route('user-examination.index');
+            return redirect()->route('user-examination.confirm');
         }
 
         // 次の問題に遷移
@@ -131,14 +119,23 @@ class UserExaminationController extends Controller
         return redirect()->route('user-examination.edit', ['user_examination' => $next]);
     }
 
+    public function confirm()
+    {
+        $itemsPerExam = env('ITEMS_PER_EXAM');
+        $userExams = UserExamination::where('user_id', auth()->id())
+            ->where('enabled', 1)->get();
+        
+        return view('user-examination.confirm', compact('userExams', 'itemsPerExam'));
+    }
+
     public function result(Request $request)
     {
         $itemsPerExam = env('ITEMS_PER_EXAM');
         $passingScore = (int)ceil($itemsPerExam * env('PASSING_RATE'));
 
-        $userExaminations = UserExamination::where('user_id', auth()->id())->get();
-        $correctCount = $userExaminations->where('question_num', '>', 0)
-            ->where('cleared', 1)->count();
+        $userExaminations = UserExamination::where('user_id', auth()->id())
+            ->where('enabled', 1)->get();
+        $correctCount = $userExaminations->where('cleared', 1)->count();
         $score = $correctCount;
 
         $name = auth()->user()->name;
