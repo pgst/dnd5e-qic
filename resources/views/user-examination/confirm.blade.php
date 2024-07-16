@@ -20,7 +20,7 @@
                                 <span>あなたの選択：</span>
                                 <span>{{ $userExam->selected_answer }}</span>
                                 <span>　</span>
-                                <a href="{{ route('user-examination.edit', $userExam->id); }}">
+                                <a href="{{ route('user-examination.select', $userExam->id); }}">
                                     <x-secondary-button>再検討</x-secondary-button>
                                 </a>
                             </p>

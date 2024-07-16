@@ -13,8 +13,8 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('user-examination.create')"
-                        :active="request()->routeIs('user-examination.create')">
+                    <x-nav-link :href="route('user-examination.start')"
+                        :active="request()->routeIs('user-examination.start')">
                         <i class="fa-solid fa-dice-d20"></i>D&D第5版PL試験
                     </x-nav-link>
                 </div>
@@ -69,8 +69,8 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('user-examination.create')"
-                :active="request()->routeIs('user-examination.create')">
+            <x-responsive-nav-link :href="route('user-examination.start')"
+                :active="request()->routeIs('user-examination.start')">
                 D&D第5版PL試験
             </x-responsive-nav-link>
         </div>

@@ -19,7 +19,7 @@
                 </div>
 
                 <div class="mb-6 text-center">
-                    <a href="{{ route('user-examination.create'); }}">
+                    <a href="{{ '/' }}">
                         <x-primary-button>完了</x-primary-button>
                     </a>
                 </div>

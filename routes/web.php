@@ -10,7 +10,7 @@ use App\Http\Controllers\UserExaminationController;
 
 Route::get('/', function () {
     // return view('welcome');
-    return redirect(route('user-examination.create'));
+    return redirect(route('user-examination.start'));
 });
 
 // Discordログイン用URL
@@ -35,17 +35,21 @@ Route::get('/auth/discord/callback', function () {
     Auth::login($user);
 
     // return redirect('/dashboard');
-    return redirect(route('user-examination.create'));
+    return redirect(route('user-examination.start'));
 });
 
 Route::get('/import-csv', [CsvImportController::class, 'show']);
 Route::post('/import-csv', [CsvImportController::class, 'import']);
 
-Route::resource('user-examination', UserExaminationController::class, ['except' => ['index', 'show', 'destroy']])
+Route::resource('user-examination', UserExaminationController::class, ['only' => ['store', 'update']])
     ->middleware(['auth', 'verified']);
-    Route::get('user-examination/confirm', [UserExaminationController::class, 'confirm'])
+Route::get('user-examination/start', [UserExaminationController::class, 'start'])
+    ->name('user-examination.start');
+Route::get('user-examination/{user_examination}/select', [UserExaminationController::class, 'select'])
+    ->name('user-examination.select');
+Route::get('user-examination/confirm', [UserExaminationController::class, 'confirm'])
     ->name('user-examination.confirm');
-    Route::post('user-examination/result', [UserExaminationController::class, 'result'])
+Route::post('user-examination/result', [UserExaminationController::class, 'result'])
     ->name('user-examination.result');
 
 Route::get('/dashboard', function () {

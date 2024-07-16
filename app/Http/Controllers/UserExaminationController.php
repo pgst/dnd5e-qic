@@ -9,21 +9,6 @@ use Illuminate\Http\Request;
 class UserExaminationController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        $count = Examination::where('enabled', 1)->count();
-        $itemsPerExam = env('ITEMS_PER_EXAM');
-        $passingScore = (int)ceil($itemsPerExam * env('PASSING_RATE'));
-        
-        return view('user-examination.create', compact('count', 'itemsPerExam', 'passingScore'));
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
@@ -64,21 +49,11 @@ class UserExaminationController extends Controller
             ->where('enabled', 1)->where('question_num', 1)->first();
 
         if (empty($userExamFirst)) {
-            return redirect()->route('user-examination.create')->with('message', '問題文がありません。');
+            return redirect()->route('user-examination.start')->with('message', '問題文がありません。');
         } else {
-            return redirect()->route('user-examination.edit', ['user_examination' => $userExamFirst->id])
+            return redirect()->route('user-examination.select', ['user_examination' => $userExamFirst->id])
                 ->with('message', $message ?? '');
         }
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(UserExamination $userExamination)
-    {
-        $itemsPerExam = env('ITEMS_PER_EXAM');
-        
-        return view('user-examination.edit', compact('userExamination', 'itemsPerExam'));
     }
 
     /**
@@ -116,7 +91,23 @@ class UserExaminationController extends Controller
 
         // 次の問題に遷移
         $next = $userExamination->id + 1;
-        return redirect()->route('user-examination.edit', ['user_examination' => $next]);
+        return redirect()->route('user-examination.select', ['user_examination' => $next]);
+    }
+
+    public function start()
+    {
+        $count = Examination::where('enabled', 1)->count();
+        $itemsPerExam = env('ITEMS_PER_EXAM');
+        $passingScore = (int)ceil($itemsPerExam * env('PASSING_RATE'));
+        
+        return view('user-examination.start', compact('count', 'itemsPerExam', 'passingScore'));
+    }
+
+    public function select(UserExamination $userExamination)
+    {
+        $itemsPerExam = env('ITEMS_PER_EXAM');
+        
+        return view('user-examination.select', compact('userExamination', 'itemsPerExam'));
     }
 
     public function confirm()
