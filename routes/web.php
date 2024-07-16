@@ -9,7 +9,7 @@ use App\Http\Controllers\CsvImportController;
 use App\Http\Controllers\UserExaminationController;
 
 Route::get('/', function () {
-    // return view('welcome');
+    // return view('welcome'); // Livewire実験用にトップページを表示
     return redirect(route('user-examination.start'));
 });
 
