@@ -44,17 +44,17 @@ Route::post('/import-csv', [CsvImportController::class, 'import']);
 Route::resource('user-examination', UserExaminationController::class, ['only' => ['store', 'update']])
     ->middleware(['auth', 'verified']);
 Route::get('user-examination/start', [UserExaminationController::class, 'start'])
-    ->name('user-examination.start');
+    ->name('user-examination.start')->middleware(['auth', 'verified']);
 Route::get('user-examination/{user_examination}/select', [UserExaminationController::class, 'select'])
-    ->name('user-examination.select');
+    ->name('user-examination.select')->middleware(['auth', 'verified']);
 Route::get('user-examination/confirm', [UserExaminationController::class, 'confirm'])
-    ->name('user-examination.confirm');
+    ->name('user-examination.confirm')->middleware(['auth', 'verified']);
 Route::post('user-examination/result', [UserExaminationController::class, 'result'])
-    ->name('user-examination.result');
+    ->name('user-examination.result')->middleware(['auth', 'verified']);
 
 Route::get('/dashboard', function () {
     // return view('dashboard');
-    return redirect(route('user-examination.create'));
+    return redirect(route('user-examination.start'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
