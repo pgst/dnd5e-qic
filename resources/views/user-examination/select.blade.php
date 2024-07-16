@@ -19,35 +19,10 @@
                         @csrf
                         @method('patch')
 
-                        <div>
-                            <p class="font-bold">
-                                <span>あなたの選択：</span>
-                                <span id="your_choice">{{ $userExamination->selected_answer }}</span>
-                            </p>
-                            <div class="text-right mt-1">
-                                <x-secondary-button onclick="setSelectedAnswer('はい')">
-                                    はい
-                                </x-secondary-button>
-                                <x-secondary-button onclick="setSelectedAnswer('いいえ')">
-                                    いいえ
-                                </x-secondary-button>
-                            </div>
-                        </div>
-
-                        <div class="mt-6 text-center">
-                            <input type="hidden" name="selected_answer" id="selected_answer" value="{{ $userExamination->selected_answer }}">
-                            <x-primary-button>回答</x-primary-button>
-                        </div>
+                        @livewire('selector', ['userExamination' => $userExamination])
                     </form>
                 </div>
             </div>
         </div>
     </div>
-
-    <script>
-    function setSelectedAnswer(answer) {
-        document.getElementById('selected_answer').value = answer;
-        document.getElementById('your_choice').textContent = answer;
-    }
-    </script>
 </x-app-layout>
