@@ -41,16 +41,22 @@ Route::get('/auth/discord/callback', function () {
 Route::get('/import-csv', [CsvImportController::class, 'show']);
 Route::post('/import-csv', [CsvImportController::class, 'import']);
 
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('user-examination/start',
+            [UserExaminationController::class, 'start']
+        )->name('user-examination.start');
+    Route::get('user-examination/{user_examination}/select',
+            [UserExaminationController::class, 'select']
+        )->name('user-examination.select');
+    Route::get('user-examination/confirm',
+            [UserExaminationController::class, 'confirm']
+        )->name('user-examination.confirm');
+    Route::post('user-examination/result',
+            [UserExaminationController::class, 'result']
+        )->name('user-examination.result');
+    });
 Route::resource('user-examination', UserExaminationController::class, ['only' => ['store', 'update']])
     ->middleware(['auth', 'verified']);
-Route::get('user-examination/start', [UserExaminationController::class, 'start'])
-    ->name('user-examination.start')->middleware(['auth', 'verified']);
-Route::get('user-examination/{user_examination}/select', [UserExaminationController::class, 'select'])
-    ->name('user-examination.select')->middleware(['auth', 'verified']);
-Route::get('user-examination/confirm', [UserExaminationController::class, 'confirm'])
-    ->name('user-examination.confirm')->middleware(['auth', 'verified']);
-Route::post('user-examination/result', [UserExaminationController::class, 'result'])
-    ->name('user-examination.result')->middleware(['auth', 'verified']);
 
 Route::get('/dashboard', function () {
     // return view('dashboard');

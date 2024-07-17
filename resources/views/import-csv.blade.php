@@ -1,21 +1,26 @@
-<!doctype html>
-<html lang="ja">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>問題文CSVファイルアップロード</title>
-</head>
 
-<body>
-    <form action="/import-csv" method="post" enctype="multipart/form-data">
-        @csrf
-        
-        <input type="file" name="file">
-        <button type="submit">インポート</button>
-    </form>
-</body>
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            <i class="fa-solid fa-dice-d20"></i>CSVファイルインポート
+        </h2>
+    </x-slot>
 
-</html>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900">
+                    <form action="/import-csv" method="post" enctype="multipart/form-data">
+                        @csrf
+                        
+                        <p class="mb-5">
+                            <input type="file" name="file">
+                        </p>
+                        <x-primary-button type="submit">インポート</x-primary-button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</x-app-layout>
