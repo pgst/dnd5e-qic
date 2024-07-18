@@ -10,7 +10,7 @@ class CsvImportController extends Controller
 {
     public function show()
     {
-        return view('import-csv');
+        return view('csv-import');
     }
 
     public function import(Request $request)

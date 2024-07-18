@@ -38,8 +38,8 @@ Route::get('/auth/discord/callback', function () {
     return redirect(route('user-examination.start'));
 });
 
-Route::get('/import-csv', [CsvImportController::class, 'show']);
-Route::post('/import-csv', [CsvImportController::class, 'import']);
+Route::get('/csv-import', [CsvImportController::class, 'show']);
+Route::post('/csv-import', [CsvImportController::class, 'import']);
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('user-examination/start',
