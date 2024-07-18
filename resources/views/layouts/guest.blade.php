@@ -16,7 +16,7 @@
     </head>
     <body class="font-sans text-gray-900 antialiased">
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
-            <div class="animate-bounce hover:animate-spin">
+            <div class="hover:animate-bounce">
                 <a href="/">
                     <x-application-logo width="100" class="text-gray-500" />
                 </a>
