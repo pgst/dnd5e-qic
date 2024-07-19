@@ -94,6 +94,9 @@ class UserExaminationController extends Controller
         return redirect()->route('user-examination.select', ['user_examination' => $next]);
     }
 
+    /**
+     * 
+     */
     public function start()
     {
         $count = Examination::where('enabled', 1)->count();
@@ -103,6 +106,9 @@ class UserExaminationController extends Controller
         return view('user-examination.start', compact('count', 'itemsPerExam', 'passingScore'));
     }
 
+    /**
+     * 
+     */
     public function select(UserExamination $userExamination)
     {
         $itemsPerExam = env('ITEMS_PER_EXAM');
@@ -110,6 +116,9 @@ class UserExaminationController extends Controller
         return view('user-examination.select', compact('userExamination', 'itemsPerExam'));
     }
 
+    /**
+     * 
+     */
     public function confirm()
     {
         $itemsPerExam = env('ITEMS_PER_EXAM');
@@ -119,6 +128,9 @@ class UserExaminationController extends Controller
         return view('user-examination.confirm', compact('userExams', 'itemsPerExam'));
     }
 
+    /**
+     * 
+     */
     public function result(Request $request)
     {
         $itemsPerExam = env('ITEMS_PER_EXAM');

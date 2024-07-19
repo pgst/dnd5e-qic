@@ -1,9 +1,12 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            <i class="fa-solid fa-dice-d20"></i>5EPL試験
+            <i class="fa-solid fa-dice-d20 me-2 hover:animate-spin"></i>
+            D&D第5版プレイヤー試験
         </h2>
     </x-slot>
+
+    <x-message :message="session('message')" />
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">

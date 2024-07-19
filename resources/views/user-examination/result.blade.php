@@ -1,7 +1,8 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            <i class="fa-solid fa-dice-d20"></i>5EPL試験　合否結果
+            <i class="fa-solid fa-dice-d20 me-2 hover:animate-spin"></i>
+            5ePL試験　合否結果
         </h2>
     </x-slot>
 
