@@ -12,7 +12,8 @@ class CompareController extends Controller
      */
     public function index()
     {
-        $userExams = UserExamination::where('user_id', auth()->id())
+        $userExams = UserExamination::with('examination')
+            ->where('user_id', auth()->id())
             ->where('enabled', 0)
             ->orderBy('created_at', 'desc')
             ->orderBy('question_num', 'asc')
