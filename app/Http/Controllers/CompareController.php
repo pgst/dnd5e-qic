@@ -15,8 +15,7 @@ class CompareController extends Controller
         $userExams = UserExamination::with('examination')
             ->where('user_id', auth()->id())
             ->where('enabled', 0)
-            ->orderBy('created_at', 'desc')
-            ->orderBy('question_num', 'asc')
+            ->orderBy('id', 'asc')
             ->paginate(10);
         
         if ($userExams->isEmpty()) {
