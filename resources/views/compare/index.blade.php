@@ -12,10 +12,10 @@
                 <div class="p-6 text-gray-900">
                     <div class="mt-4">{{ $userExams->links() }}</div>
 
-                    <div class="w-full flex justify-center mb-3 font-bold">
-                        <i class="fa-regular fa-bell me-2"></i>
+                    <div class="w-full flex justify-center my-3 text-2xl hover:animate-bounce">
+                        <i class="fa-solid fa-bell text-yellow-300 mt-1 me-2"></i>
                         {{ $userExams->first()->challenge_num }}回目の受験結果
-                        <i class="fa-regular fa-bell ms-2"></i>
+                        <i class="fa-solid fa-bell text-yellow-300 mt-1 ms-2"></i>
                     </div>
 
                     @foreach ($userExams as $index => $userExam)
@@ -26,7 +26,9 @@
                             <i class="ms-2 fa-solid fa-check"></i>
                             @endif
                         </p>
-                        <p>{{ $userExam->examination->question_txt }}</p>
+                        <div class="rounded-lg text-white bg-slate-500 p-2">
+                            {{ $userExam->examination->question_txt }}
+                        </div>
 
                         <div>
                             @if ($userExam->selected_answer == $userExam->examination->correct_answer)
