@@ -5,18 +5,21 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\UserExamination;
 
+/**
+ * 受験結果参照コントローラ
+ */
 class CompareController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * 受験結果を表示
      */
     public function index()
     {
         $userExams = UserExamination::with('examination')
             ->where('user_id', auth()->id())
             ->where('enabled', 0)
-            ->orderBy('id', 'asc')
-            ->paginate(10);
+            ->orderBy('id', 'ASC')
+            ->paginate(env('ITEMS_PER_EXAM'));
         
         if ($userExams->isEmpty()) {
             return redirect()->route('user-examination.start')

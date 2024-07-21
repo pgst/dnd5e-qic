@@ -6,13 +6,24 @@ use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Models\Examination;
 
+/**
+ * CSVインポートコントローラ
+ */
 class CsvImportController extends Controller
 {
+    /**
+     * CSVインポートフォーム表示
+     */
     public function show()
     {
         return view('csv-import');
     }
 
+    /**
+     * CSVインポート処理
+     * 
+     * @param Request $request
+     */
     public function import(Request $request)
     {
         $file = $request->file('file');
