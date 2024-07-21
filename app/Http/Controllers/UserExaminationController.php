@@ -6,29 +6,52 @@ use App\Models\Examination;
 use App\Models\UserExamination;
 use Illuminate\Http\Request;
 
+/**
+ * ユーザー回答コントローラ
+ */
 class UserExaminationController extends Controller
 {
     /**
-     * Store a newly created resource in storage.
+     * 回答準備画面を表示
+     */
+    public function start()
+    {
+        $count = Examination::where('enabled', 1)->count();
+        $itemsPerExam = env('ITEMS_PER_EXAM');
+        $passingScore = (int)ceil($itemsPerExam * env('PASSING_RATE'));
+        
+        return view('user-examination.start', compact('count', 'itemsPerExam', 'passingScore'));
+    }
+
+    /**
+     * 回答欄を用意する処理
+     * 
+     * @param Request $request
      */
     public function store(Request $request)
     {
         $itemsPerExam = $request->exam;   // 問題文数
         $passingScore = $request->score;  // 合格点数
 
-        // ログインユーザーの回答欄があれば取得する
-        $userExaminations = UserExamination::where('user_id', auth()->id())->get();
+        // ログインユーザーの未提出の回答欄があれば取得する
+        $userExaminations = UserExamination::where('user_id', auth()->id())
+            ->where('enabled', 1)->get();
 
-        // 未提出がある場合は、メッセージを設定
-        if ($userExaminations->where('enabled', 1)->count() > 0) {
+        if ($userExaminations->count() > 0) {
             $message = '前回の試験が完了していないので再度表示します。';
+
+            // 未提出だがすべて解答済みの場合は、提出確認画面に遷移
+            if ($userExaminations->where('selected_answer', null)->count() == 0) {
+                return redirect()->route('user-examination.confirm')
+                    ->with('message',  $message);
+            }
         }
 
         // 挑戦回数の最大値を取得して、今回の挑戦回数を設定
         $challenge_num = $userExaminations->max('challenge_num') + 1;
         
         // 未提出がない場合は、問題文からランダムに取得する
-        if ($userExaminations->where('enabled', 1)->count() == 0) {
+        if ($userExaminations->count() == 0) {
             $examinations = Examination::where('enabled', 1)->inRandomOrder()->limit($itemsPerExam)->get();
 
             // 回答欄を準備
@@ -49,15 +72,31 @@ class UserExaminationController extends Controller
             ->where('enabled', 1)->where('question_num', 1)->first();
 
         if (empty($userExamFirst)) {
-            return redirect()->route('user-examination.start')->with('message', '問題文がありません。');
+            return redirect()->route('user-examination.start')
+                ->with('message', '問題文がありません。');
         } else {
             return redirect()->route('user-examination.select', ['user_examination' => $userExamFirst->id])
-                ->with('message', $message ?? '');
+            ->with('message', $message ?? '');
         }
     }
 
     /**
-     * Update the specified resource in storage.
+     * 問題文と選択肢を表示
+     * 
+     * @param UserExamination $userExamination
+     */
+    public function select(UserExamination $userExamination)
+    {
+        $itemsPerExam = env('ITEMS_PER_EXAM');
+        
+        return view('user-examination.select', compact('userExamination', 'itemsPerExam'));
+    }
+
+    /**
+     * 回答した選択肢を保存
+     * 
+     * @param Request $request
+     * @param UserExamination $userExamination
      */
     public function update(Request $request, UserExamination $userExamination)
     {
@@ -95,29 +134,7 @@ class UserExaminationController extends Controller
     }
 
     /**
-     * 
-     */
-    public function start()
-    {
-        $count = Examination::where('enabled', 1)->count();
-        $itemsPerExam = env('ITEMS_PER_EXAM');
-        $passingScore = (int)ceil($itemsPerExam * env('PASSING_RATE'));
-        
-        return view('user-examination.start', compact('count', 'itemsPerExam', 'passingScore'));
-    }
-
-    /**
-     * 
-     */
-    public function select(UserExamination $userExamination)
-    {
-        $itemsPerExam = env('ITEMS_PER_EXAM');
-        
-        return view('user-examination.select', compact('userExamination', 'itemsPerExam'));
-    }
-
-    /**
-     * 
+     * 提出確認画面を表示
      */
     public function confirm()
     {
@@ -129,7 +146,9 @@ class UserExaminationController extends Controller
     }
 
     /**
+     * 結果画面を表示
      * 
+     * @param Request $request
      */
     public function result(Request $request)
     {
