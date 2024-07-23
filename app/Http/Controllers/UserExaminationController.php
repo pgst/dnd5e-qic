@@ -138,9 +138,14 @@ class UserExaminationController extends Controller
      */
     public function confirm()
     {
-        $itemsPerExam = env('ITEMS_PER_EXAM');
         $userExams = UserExamination::where('user_id', auth()->id())
             ->where('enabled', 1)->get();
+        
+        if ($userExams->where('selected_answer', '==', null)) {
+            return redirect()->route('user-examination.start');
+        }
+        
+        $itemsPerExam = env('ITEMS_PER_EXAM');
         
         return view('user-examination.confirm', compact('userExams', 'itemsPerExam'));
     }
