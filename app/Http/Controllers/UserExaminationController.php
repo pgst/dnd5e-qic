@@ -48,7 +48,8 @@ class UserExaminationController extends Controller
         }
 
         // 挑戦回数の最大値を取得して、今回の挑戦回数を設定
-        $challenge_num = $userExaminations->max('challenge_num') + 1;
+        $challenge_num = UserExamination::where('user_id', auth()->id())
+            ->max('challenge_num') + 1;
         
         // 未提出がない場合は、問題文からランダムに取得する
         if ($userExaminations->count() == 0) {
