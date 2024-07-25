@@ -21,7 +21,6 @@ Route::get('/auth/discord/redirect', function () {
 // Discordログイン用リダイレクト先
 Route::get('/auth/discord/callback', function () {
     $socialiteUser = Socialite::driver('discord')->user();
-    // dd($socialiteUser);
     $user = User::updateOrCreate([
         'provider_id' => $socialiteUser->id,
         'provider' => 'discord',
